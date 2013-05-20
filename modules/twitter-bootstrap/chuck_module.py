@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-depends = ['django-compressor', 'less-css']
+#depends = ['django-compressor', 'less-css']
 description = """
 Adds Twitter's Bootstrap CSS library to your project.
 
@@ -13,14 +13,22 @@ http://twitter.github.com/bootstrap/
 """
 
 def post_build():
-    bootstrap_dir = os.path.join(project_dir, 'static/bootstrap')
+    #bootstrap_dir = os.path.join(project_dir, 'static/bootstrap')
+    bootstrap_dir = os.path.join(project_dir, 'static')
     if not os.path.exists(bootstrap_dir):
         os.makedirs(bootstrap_dir)
+    #subprocess.call(
+        #'cd '+site_dir+'; mkdir .src; cd .src; \
+        #git clone https://github.com/twitter/bootstrap.git; \
+        #mv -v bootstrap/less '+bootstrap_dir+'; \
+        #mv -v bootstrap/img '+bootstrap_dir+'; \
+        #mv -v bootstrap/js '+bootstrap_dir+'; \
+        #cd ..; rm -rf .src;',
+        #shell=True)
     subprocess.call(
         'cd '+site_dir+'; mkdir .src; cd .src; \
-        git clone https://github.com/twitter/bootstrap.git; \
-        mv -v bootstrap/less '+bootstrap_dir+'; \
-        mv -v bootstrap/img '+bootstrap_dir+'; \
-        mv -v bootstrap/js '+bootstrap_dir+'; \
+        wget -c http://twitter.github.io/bootstrap/assets/bootstrap.zip; \
+        unzip bootstrap.zip; \
+        mv -v bootstrap '+bootstrap_dir+'; \
         cd ..; rm -rf .src;',
         shell=True)

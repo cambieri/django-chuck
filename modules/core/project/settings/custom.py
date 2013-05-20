@@ -3,7 +3,7 @@
 INTERNAL_IPS = ('127.0.0.1',)
 
 ADMINS = (
-	('Webmaster', 'webmaster@$EMAIL_DOMAIN'),
+	('Oscar Cambieri', 'oscar@$EMAIL_DOMAIN'),
 )
 
 MANAGERS = ADMINS
@@ -15,8 +15,10 @@ MANAGERS = ADMINS
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-# TIME_ZONE = 'Europe/Zurich'
+TIME_ZONE = 'Europe/Rome'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'it-IT'
+
+EMAIL_SUBJECT_PREFIX = '[Django - $PROJECT_NAME] '

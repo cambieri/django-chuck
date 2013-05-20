@@ -20,6 +20,10 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 APPEND_SLASH = True
 
+# Hosts/domain names that are valid for this site; required if DEBUG is False
+# See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = []
+
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -64,8 +68,12 @@ STATICFILES_FINDERS = (
     #!chuck_renders STATICFILES_FINDERS
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
     #!end
 )
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'v-dxvu3wftpd#y(nc((g)p1wmvc0306-&!+#k%lm7y55(vdlrb'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -78,6 +86,7 @@ TEMPLATE_LOADERS = (
     #!chuck_renders TEMPLATE_LOADERS
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
+#     'django.template.loaders.eggs.Loader',
     #!end
 )
 
@@ -129,6 +138,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    # Le apps del progetto vanno messe prima di 'admin' per poter personalizzare i messaggi in 'locale'
+    'main',
     'django.contrib.admin',
     #!end
 )
@@ -136,15 +147,21 @@ INSTALLED_APPS = (
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error.
+# the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
+            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         }
     },

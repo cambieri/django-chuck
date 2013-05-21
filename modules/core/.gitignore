@@ -3,6 +3,7 @@
 *.pyo
 *.DS_Store
 .pydevproject
+.project
 .settings
 .idea
 */.ropeproject/*
@@ -14,4 +15,4 @@
 */media/upload/
 */media/cache/
 */media/generated/
-#!chuck_renders GIT #!end
+secret_key.py

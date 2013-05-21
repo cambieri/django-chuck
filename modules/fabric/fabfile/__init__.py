@@ -9,45 +9,45 @@ In order to deploy, run "fab <env> deploy"
 # If you need to specify a file system path, please add a trailing slash
 config = {
     'live': {
-        'server': 'CHANGEME@$SITE_NAME',
+        'server': 'root@cmbhosting.no-ip.biz',
         'django': {
             'site_dir_name': '$SITE_NAME-live',
-            'site_root': '$SERVER_PROJECT_BASEDIR/$SITE_NAME-live/',
+            'site_root': '/opt/django/sites/$SITE_NAME-live/',
             'project_dir_name': '$PROJECT_NAME',
-            'project_root': '$SERVER_PROJECT_BASEDIR/$SITE_NAME-live/$PROJECT_NAME/',
+            'project_root': '/opt/django/sites/$SITE_NAME-live/$PROJECT_NAME/',
             'settings_module': '$PROJECT_NAME.settings.live'
         },
         'virtualenv': {
-            'path': '$SERVER_VIRTUALENV_BASEDIR/$SITE_NAME-live/',
-            'requirements_file': '$SERVER_PROJECT_BASEDIR/$SITE_NAME-live/requirements/requirements_live.txt',
+            'path': '/opt/django/virtualenvs/$SITE_NAME-live/',
+            'requirements_file': '/opt/django/sites/$SITE_NAME-live/requirements/requirements_live.txt',
         },
         'git': {
             'server_name': 'origin',
             'branch_name': 'live',
         },
         'webserver': {
-            'touch_file': '$SERVER_PROJECT_BASEDIR/$SITE_NAME-live/uwsgi/live/django_wsgi.py'
+            'touch_file': '/opt/django/sites/$SITE_NAME-live/uwsgi/live/django_wsgi.py'
         }
     },
     'stage': {
-        'server': 'CHANGEME@$SITE_NAME',
+        'server': 'root@cmbhosting.no-ip.biz',
         'django': {
             'site_dir_name': '$SITE_NAME',
-            'site_root': '$SERVER_PROJECT_BASEDIR/$SITE_NAME-stage/',
+            'site_root': '/opt/django/sites/$SITE_NAME-stage/',
             'project_dir_name': '$PROJECT_NAME',
-            'project_root': '$SERVER_PROJECT_BASEDIR/$SITE_NAME-stage/$PROJECT_NAME/',
+            'project_root': '/opt/django/sites/$SITE_NAME-stage/$PROJECT_NAME/',
             'settings_module': '$PROJECT_NAME.settings.stage'
         },
         'virtualenv': {
-            'path': '$SERVER_VIRTUALENV_BASEDIR/$SITE_NAME-stage/',
-            'requirements_file': '$SERVER_PROJECT_BASEDIR/$SITE_NAME-stage/requirements/requirements_live.txt',
+            'path': '/opt/django/virtualenvs/$SITE_NAME-stage/',
+            'requirements_file': '/opt/django/sites/$SITE_NAME-stage/requirements/requirements_live.txt',
         },
         'git': {
             'server_name': 'origin',
             'branch_name': 'stage',
         },
         'webserver': {
-            'touch_file': '$SERVER_PROJECT_BASEDIR/$SITE_NAME-stage/uwsgi/stage/django_wsgi.py'
+            'touch_file': '/opt/django/sites/$SITE_NAME-stage/uwsgi/stage/django_wsgi.py'
         }
     }
 }
@@ -88,7 +88,7 @@ def install_requirements():
 # Helpers
 
 def __activate():
-    return 'export LANG=de_CH.UTF-8 && source {0}bin/activate && export DJANGO_SETTINGS_MODULE={1} && export PYTHONPATH={2}'.format(
+    return 'export LANG=it_IT.UTF-8 && source {0}bin/activate && export DJANGO_SETTINGS_MODULE={1} && export PYTHONPATH={2}'.format(
         config[env.environment]['virtualenv']['path'],
         config[env.environment]['django']['settings_module'],
         config[env.environment]['django']['site_root'],

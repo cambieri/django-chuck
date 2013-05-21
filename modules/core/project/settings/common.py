@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
-from $PROJECT_NAME.settings.custom import *
+from fondstamp.settings.custom import *
 
 ugettext = lambda s: s
 
@@ -35,7 +35,6 @@ USE_I18N = True
 USE_L10N = True
 
 
-
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
@@ -57,23 +56,16 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    #!chuck_renders STATICFILES_DIRS
-    os.path.join(PROJECT_ROOT, 'static'),
-    #!end
-)
+        os.path.join(PROJECT_ROOT, 'static'),
+    )
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
-    #!chuck_renders STATICFILES_FINDERS
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
-    #!end
-)
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'v-dxvu3wftpd#y(nc((g)p1wmvc0306-&!+#k%lm7y55(vdlrb'
+    )
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -83,54 +75,43 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    #!chuck_renders TEMPLATE_LOADERS
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.Loader',
-    #!end
-)
+    )
 
 
 MIDDLEWARE_CLASSES = (
-    #!chuck_renders MIDDLEWARE_CLASSES
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #!end
-)
+    )
 
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    #!chuck_renders TEMPLATE_CONTEXT_PROCESSORS
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.i18n',
     'django.core.context_processors.request',
     'django.core.context_processors.static',
     'django.core.context_processors.media',
     'django.core.context_processors.debug',
-    #!end
-)
+    )
 
 
 AUTHENTICATION_BACKENDS = (
-    #!chuck_renders AUTHENTICATION_BACKENDS
     'django.contrib.auth.backends.ModelBackend',
-    #!end
-)
+    )
 
 ROOT_URLCONF = '$PROJECT_NAME.urls'
 
 TEMPLATE_DIRS = (
-    #!chuck_renders TEMPLATE_DIRS
-    os.path.join(PROJECT_ROOT, 'templates'),
-    #!end
-)
+        os.path.join(PROJECT_ROOT, 'templates'),
+    )
 
 INSTALLED_APPS = (
-    #!chuck_renders INSTALLED_APPS
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -138,12 +119,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    
     # Le apps del progetto vanno messe prima di 'admin' per poter personalizzare i messaggi in 'locale'
     'main',
     'django.contrib.admin',
-    #!end
+    'south',
 )
-
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -174,13 +155,31 @@ LOGGING = {
     }
 }
 
-#!chuck_renders SETTINGS
 # Save timestamps in utc
 USE_TZ = True
 
 # cickhacking protection
 X_FRAME_OPTIONS = 'DENY'
-#!end
 
 
+# Invio email con classe send_mail configurata con smtp google
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'sendmail@cambieri.it'
+# EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+EMAIL_SUBJECT_PREFIX = '[Django - $PROJECT_NAME] '
 
+# Generazione automatica SECRET_KEY
+def generate_secret_key(file_path):
+	from django.utils.crypto import get_random_string
+	chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+	secret_key = get_random_string(50, chars)
+	with open(file_path, "w") as text_file:
+		text_file.write("SECRET_KEY = '%s'" % secret_key)
+try:
+    from secret_key import *
+except ImportError:
+    SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
+    generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
+    from secret_key import *

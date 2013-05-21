@@ -9,23 +9,15 @@ from $PROJECT_NAME.settings.common import *
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-# E-mail
-EMAIL_HOST = 'localhost'
-SERVER_EMAIL = 'sendmail@$EMAIL_DOMAIN'
-DEFAULT_FROM_EMAIL = 'sendmail@$EMAIL_DOMAIN'
-
 # Misc
-PREPEND_WWW = True
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = ''
+PREPEND_WWW = False
 
 # Cache
 CACHES = {
     #!chuck_renders CACHES
-#    'default': {
-#        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-#    }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
     #!end
 }
 

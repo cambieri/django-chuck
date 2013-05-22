@@ -13,6 +13,30 @@ sys.path.append(PROJECT_ROOT)
 sys.path.append(PROJECT_ROOT + '/apps/')
 sys.path.append(PROJECT_ROOT + '/libs/')
 
+
+# Generazione automatica SECRET_KEY
+def generate_secret_key(file_path):
+	from django.utils.crypto import get_random_string
+	chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+	secret_key = get_random_string(50, chars)
+	with open(file_path, "w") as text_file:
+		text_file.write("SECRET_KEY = '%s'" % secret_key)
+try:
+    from secret_key import *
+except ImportError:
+    SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
+    generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
+    from secret_key import *
+
+# Invio email con classe send_mail configurata con smtp google
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'sendmail@cambieri.it'
+# EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+EMAIL_SUBJECT_PREFIX = '[Django - $PROJECT_NAME] '
+
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -160,26 +184,3 @@ USE_TZ = True
 
 # cickhacking protection
 X_FRAME_OPTIONS = 'DENY'
-
-
-# Invio email con classe send_mail configurata con smtp google
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'sendmail@cambieri.it'
-# EMAIL_HOST_PASSWORD = ''
-EMAIL_PORT = 587
-EMAIL_SUBJECT_PREFIX = '[Django - $PROJECT_NAME] '
-
-# Generazione automatica SECRET_KEY
-def generate_secret_key(file_path):
-	from django.utils.crypto import get_random_string
-	chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-	secret_key = get_random_string(50, chars)
-	with open(file_path, "w") as text_file:
-		text_file.write("SECRET_KEY = '%s'" % secret_key)
-try:
-    from secret_key import *
-except ImportError:
-    SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
-    generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
-    from secret_key import *

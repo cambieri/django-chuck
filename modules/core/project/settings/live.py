@@ -3,11 +3,13 @@
 # - sites: all
 # - environments: prod
 
+import os
 from $PROJECT_NAME.settings.common import *
 
 # Debugging
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+ALLOWED_HOSTS = ['cmbhosting.no-ip.biz', '89.32.146.242']
 
 # Misc
 PREPEND_WWW = False
@@ -34,6 +36,8 @@ DATABASES = {
 #    },
     #!end
 }
+
+DEFAULT_CHARSET='utf-8'
 
 #!chuck_renders SETTINGS
 #!end

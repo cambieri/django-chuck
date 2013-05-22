@@ -62,6 +62,34 @@ def live():
     env.hosts = [config[env.environment]['server']]
 
 # Fab Tasks
+
+def prepare_server():
+    site_name = config[env.environment]['django']['site_dir_name']
+    site_root = config[env.environment]['django']['site_root']
+    with cd('/'):
+        run('mkdir -p /opt/django/virtualenvs')
+        run('mkdir -p {0}'.format(site_root))
+    with cd(config[env.environment]['virtualenv']['path'] + "../"):
+        run('virtualenv --no-site-packages {0}'.format(site_name))
+    with cd(site_root):
+        run('git init')
+        run('sudo -u postgres createuser -d -R -S {0}'.format(site_name))
+        run('sudo -u postgres createdb -T template1 -O {0} {1}'.format(site_name, site_name))
+        run('ln -s {0}uwsgi/{1}/uwsgi.xml /etc/uwsgi/apps-enabled/{2}.xml'.format(site_root, env.environment, site_name))
+        run('ln -s {0}hosting/nginx/virtualhost-{1}.conf /etc/nginx/sites-enabled/{2}.conf'.format(site_root, env.environment, site_name))	
+
+def prepare_deploy():
+    with lcd('/home/workspace-django/projects/$SITE_NAME/$PROJECT_NAME'):
+        local("python2 ./manage.py test main")
+    with lcd('/home/workspace-django/projects/$SITE_NAME'):
+        local('git checkout master')
+        local('git add -A && git commit')
+        local('git push')
+        local('git checkout {0}'.format(config[env.environment]['git']['branch_name']))
+        local('git merge master')
+        local('git push')
+        local('git checkout master')
+
 def deploy():
     """
     Deploy, migrate, collect static files, restart webserver

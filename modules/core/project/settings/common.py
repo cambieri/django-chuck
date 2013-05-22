@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
-from fondstamp.settings.custom import *
+from $PROJECT_NAME.settings.custom import *
 
 ugettext = lambda s: s
 

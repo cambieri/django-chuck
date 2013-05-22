@@ -29,7 +29,6 @@ class Command(BaseCommand):
         build_snapshot.Command().handle(args, cfg)
         create_database.Command().handle(args, cfg)
 
-
         self.print_header("SUMMARY")
 
         installed_modules = self.get_install_modules()

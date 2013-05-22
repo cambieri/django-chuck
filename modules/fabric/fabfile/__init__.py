@@ -11,6 +11,7 @@ config = {
     'live': {
         'server': 'root@cmbhosting.no-ip.biz',
         'django': {
+            'site_name': '$SITE_NAME',
             'site_dir_name': '$SITE_NAME-live',
             'site_root': '/opt/django/sites/$SITE_NAME-live/',
             'project_dir_name': '$PROJECT_NAME',
@@ -32,7 +33,8 @@ config = {
     'stage': {
         'server': 'root@cmbhosting.no-ip.biz',
         'django': {
-            'site_dir_name': '$SITE_NAME',
+            'site_name': '$SITE_NAME',
+            'site_dir_name': '$SITE_NAME-stage',
             'site_root': '/opt/django/sites/$SITE_NAME-stage/',
             'project_dir_name': '$PROJECT_NAME',
             'project_root': '/opt/django/sites/$SITE_NAME-stage/$PROJECT_NAME/',
@@ -63,27 +65,45 @@ def live():
 
 # Fab Tasks
 
+def prepare_git():
+    with lcd('/home/workspace-django/projects/$SITE_NAME'):
+        git_create_repo_param = '{"name":"$SITE_NAME"}'
+        git_create_repo = "curl -u 'cambieri' https://api.github.com/user/repos -d '{0}'".format(git_create_repo_param)
+        local(git_create_repo)
+        local('git init && git add -A && git commit -m "first commit"')
+        local('git remote add origin git@github.com:cambieri/$SITE_NAME.git')
+        local('git push -u origin master')
+        branch_name = config[env.environment]['git']['branch_name']
+        local('git branch {0}'.format(branch_name))
+        local('git push -u origin {0}'.format(branch_name))
+        local('git checkout master')
+
 def prepare_server():
-    site_name = config[env.environment]['django']['site_dir_name']
+    site_name = config[env.environment]['django']['site_name']
+    site_dir_name = config[env.environment]['django']['site_dir_name']
+    site_db_name = site_dir_name.replace("-", "_")
     site_root = config[env.environment]['django']['site_root']
     with cd('/'):
         run('mkdir -p /opt/django/virtualenvs')
         run('mkdir -p {0}'.format(site_root))
-    with cd(config[env.environment]['virtualenv']['path'] + "../"):
-        run('virtualenv --no-site-packages {0}'.format(site_name))
+    with cd('/opt/django/virtualenvs'):
+        run('virtualenv --no-site-packages {0}'.format(site_dir_name))
     with cd(site_root):
         run('git init')
-        run('sudo -u postgres createuser -d -R -S {0}'.format(site_name))
-        run('sudo -u postgres createdb -T template1 -O {0} {1}'.format(site_name, site_name))
-        run('ln -s {0}uwsgi/{1}/uwsgi.xml /etc/uwsgi/apps-enabled/{2}.xml'.format(site_root, env.environment, site_name))
-        run('ln -s {0}hosting/nginx/virtualhost-{1}.conf /etc/nginx/sites-enabled/{2}.conf'.format(site_root, env.environment, site_name))	
+        with settings(warn_only = True):
+            run('git remote add origin git@github.com:cambieri/{0}.git'.format(site_name))
+        run('sudo -u postgres createuser -d -R -S {0}'.format(site_db_name))
+        run('sudo -u postgres createdb -T template1 -O {0} {1}'.format(site_db_name, site_db_name))
+        run('ln -s {0}uwsgi/{1}/uwsgi.xml /etc/uwsgi/apps-enabled/{2}.xml'.format(site_root, env.environment, site_dir_name))
+        run('ln -s {0}hosting/nginx/virtualhost-{1}.conf /etc/nginx/sites-enabled/{2}.conf'.format(site_root, env.environment, site_dir_name))	
 
 def prepare_deploy():
     with lcd('/home/workspace-django/projects/$SITE_NAME/$PROJECT_NAME'):
         local("python2 ./manage.py test main")
     with lcd('/home/workspace-django/projects/$SITE_NAME'):
         local('git checkout master')
-        local('git add -A && git commit')
+        with settings(warn_only = True):
+            local('git add -A && git commit')
         local('git push')
         local('git checkout {0}'.format(config[env.environment]['git']['branch_name']))
         local('git merge master')
@@ -116,7 +136,7 @@ def install_requirements():
 # Helpers
 
 def __activate():
-    return 'export LANG=it_IT.UTF-8 && source {0}bin/activate && export DJANGO_SETTINGS_MODULE={1} && export PYTHONPATH={2}'.format(
+    return 'export LANG=it_IT.UTF-8 && source {0}bin/activate && export DJANGO_SETTINGS_MODULE={1} && export PYTHONPATH={2} '.format(
         config[env.environment]['virtualenv']['path'],
         config[env.environment]['django']['settings_module'],
         config[env.environment]['django']['site_root'],

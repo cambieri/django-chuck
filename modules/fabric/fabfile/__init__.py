@@ -65,6 +65,10 @@ def live():
 
 # Fab Tasks
 
+def prepare_south():
+    with lcd('/home/workspace-django/projects/ironika-fondstamp'):
+        local('django-admin.py schemamigration main --initial')
+
 def prepare_git():
     with lcd('/home/workspace-django/projects/$SITE_NAME'):
         git_create_repo_param = '{"name":"$SITE_NAME"}'
@@ -102,6 +106,7 @@ def prepare_deploy():
         local("python2 ./manage.py test main")
     with lcd('/home/workspace-django/projects/$SITE_NAME'):
         local('git checkout master')
+        local('django-admin.py migrate')
         with settings(warn_only = True):
             local('git add -A && git commit')
         local('git push')

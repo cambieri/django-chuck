@@ -9,7 +9,7 @@ from $PROJECT_NAME.settings.common import *
 # Debugging
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-ALLOWED_HOSTS = ['cmbhosting.no-ip.biz', '89.32.146.242']
+ALLOWED_HOSTS = ['$PROJECT_NAME.cambieri.info', 'www.cambieri.info', 'cambieri.info', 'cmbhosting.no-ip.biz', '89.32.146.242']
 
 # Misc
 PREPEND_WWW = False

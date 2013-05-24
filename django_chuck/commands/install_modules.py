@@ -52,7 +52,11 @@ class Command(BaseCommand):
                 rel_path_old = f.replace(module.dir, "")
 
                 # Relative path to module file with project_name replaced
-                rel_path_new = f.replace(module.dir, "").replace("project", self.project_name)
+                if not ".project" in f and not ".pydevproject" in f:
+                    rel_path_new = f.replace(module.dir, "").replace("project", self.project_name)
+                else:
+                    rel_path_new = rel_path_old
+                    print "TROVATO!!!"
 
                 # Absolute path to module file in site dir
                 output_file = f.replace(module.dir, self.site_dir).replace(rel_path_old, rel_path_new)

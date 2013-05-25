@@ -9,6 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', TemplateView.as_view(template_name="index.html")),
+    #url(r'^pagina1$', TemplateView.as_view(template_name="pagina1.html", get_context_data=lambda: {'pagina': 'pagina1'})),
 )
 
 # static media
@@ -17,3 +18,5 @@ if settings.DEBUG:
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     )
 #!end
+
+# handler500 = 'main.views.nondefault_500_error'

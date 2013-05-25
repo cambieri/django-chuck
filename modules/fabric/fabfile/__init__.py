@@ -135,6 +135,7 @@ def install_requirements():
     _install_requirements()
     _syncdb()
     _migrate()
+    _collect_static_files()
     _restart_webserver()
 
 

@@ -4,4 +4,33 @@ body {
 	/* background-color: black; */
 	padding-top: 40px;
 	padding-bottom: 40px;
+	font-size: 12px;
+}
+
+header {
+	background-color: white;
+	color: #333;
+	text-align: center;
+	font-size: 14px;
+	line-height: 42px;
+}
+
+footer {
+	background-color: black;
+	color: #DDD;
+	text-align: center;
+	font-size: 10px;
+	line-height: 24px;
+}
+
+.content {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.title {
+	margin-top: 2%;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
 }

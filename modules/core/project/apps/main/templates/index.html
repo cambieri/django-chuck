@@ -7,9 +7,19 @@
 
 
 {# Content of the page #}
-{% block markup %}
-
-	<h1>Benvenuti su $PROJECT_NAME</h1>
-
+{% block inner_markup %}
+					<div class="title">Benvenuti su $PROJECT_NAME</div>
+					<h5>Contenuti homepage</h5>
+					<div class="row">
+						<div class="span4">riga 1, colonna1</div>
+						<div class="span4">riga 1, colonna2</div>
+						<div class="span4">riga 1, colonna3</div>
+					</div>
+					<div class="row">
+						<div class="span12">riga 2</div>
+					</div>
+					<div class="row">
+						<div class="span12">riga 3</div>
+					</div>
 {% endblock %}
 {# end of content #}

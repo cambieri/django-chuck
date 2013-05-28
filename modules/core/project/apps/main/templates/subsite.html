@@ -1,6 +1,27 @@
 {% extends "site_base.html" %}
 {% load i18n %}
 
+{% block css %}
+{{ block.super }}
+		<link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
+		
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+{% endblock %}
+
 {% block markup %}
-    <h1>{% trans "Hello Chuck!" %}</h1>
+		<div class="container">
+			<header>
+				<img src="{{ STATIC_URL }}img/logo.png"/>
+			</header>
+			<div class="content">
+					{% block inner_markup %}
+					{% endblock %}
+			</div>
+			<footer>
+				© 2013 [azienda] - TEL. +39 0123 456789 - P.IVA 0123456789 - Via Tal De Tali, 1 - 12345 [città] (prov) - [email]
+			</footer>
+		</div> <!-- /container -->
 {% endblock %}

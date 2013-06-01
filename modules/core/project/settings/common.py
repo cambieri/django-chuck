@@ -180,7 +180,7 @@ LOGGING = {
 }
 
 # Save timestamps in utc
-USE_TZ = True
+# USE_TZ = True
 
 # cickhacking protection
 X_FRAME_OPTIONS = 'DENY'

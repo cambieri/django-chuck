@@ -106,6 +106,7 @@ def prepare_deploy():
         local("python2 ./manage.py test main")
     with lcd('/home/workspace-django/projects/$SITE_NAME'):
         local('git checkout master')
+        local('django-admin.py schemamigration main --auto')
         local('django-admin.py migrate')
         with settings(warn_only = True):
             local('git add -A && git commit')
